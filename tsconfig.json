@@ -19,6 +19,7 @@
       "utils/*": ["./utils/*"],
       "styles/*": ["./styles/*"],
       "api/*": ["./api/*"],
+      "lib/*": ["./lib/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
