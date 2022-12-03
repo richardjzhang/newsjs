@@ -20,8 +20,9 @@
       "styles/*": ["./styles/*"],
       "api/*": ["./api/*"],
       "lib/*": ["./lib/*"],
+      "models/*": ["./models/*"],
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "models/user.js"],
   "exclude": ["node_modules"]
 }
