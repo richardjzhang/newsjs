@@ -1,5 +1,6 @@
 import "styles/globals.css";
 import type { AppProps } from "next/app";
+import { SessionProvider } from "next-auth/react";
 import { Playfair_Display, Zilla_Slab } from "@next/font/google";
 import Layout from "components/Layout";
 
@@ -12,15 +13,17 @@ const zillaSlab = Zilla_Slab({
   variable: "--font-zilla-slab",
 });
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
-    <main className={`${playfair.variable} ${zillaSlab.variable}`}>
-      <div className="font-body h-screen">
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </div>
-    </main>
+    <SessionProvider session={session}>
+      <main className={`${playfair.variable} ${zillaSlab.variable}`}>
+        <div className="font-body h-screen">
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </div>
+      </main>
+    </SessionProvider>
   );
 }
 

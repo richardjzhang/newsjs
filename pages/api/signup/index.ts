@@ -13,7 +13,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  if (req.method !== "POST") return errorHandler("Invalid Request Type", res);
+  if (req.method !== "POST") {
+    errorHandler("Invalid Request Type", res, 405);
+    return;
+  }
 
   try {
     validateAllOnce(req.body);
@@ -30,22 +33,22 @@ export default async function handler(
 
     if (saveUser) {
       const userDoc = saveUser._doc;
-      const { name, email } = userDoc;
-      return responseHandler(
-        {
-          name,
-          email,
-        },
-        res,
-        201
-      );
+      const { password, ...userData } = userDoc;
+      responseHandler(userData, res, 201);
+      return;
     }
 
     return errorHandler("Something went wrong", res);
   } catch (error) {
     let message = "Unknown error";
-    if (error instanceof Error) return errorHandler(error.message, res);
-    if (typeof error === "string") return errorHandler(error, res);
-    return errorHandler(message, res);
+    if (error instanceof Error) {
+      errorHandler(error.message, res);
+      return;
+    }
+    if (typeof error === "string") {
+      errorHandler(error, res);
+      return;
+    }
+    errorHandler(message, res);
   }
 }

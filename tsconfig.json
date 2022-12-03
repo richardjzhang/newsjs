@@ -21,8 +21,9 @@
       "api/*": ["./api/*"],
       "lib/*": ["./lib/*"],
       "models/*": ["./models/*"],
+      "client/*": ["./client/*"],
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "models/user.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }

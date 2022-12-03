@@ -9,13 +9,13 @@ const zillaSlab = Zilla_Slab({
 export default function Navigation() {
   return (
     <div className="py-4 px-3 flex align-center justify-between border-b-2">
-      <button className="text-lg">
+      <button className="flex justify-start items-center flex-1 text-lg">
         <Link href="/profile">Richard</Link>
       </button>
-      <Link className="text-4xl font-title font-bold uppercase" href="/">
+      <Link className="mx-4 text-4xl font-title font-bold uppercase" href="/">
         Newsjs
       </Link>
-      <div>
+      <div className="ml-auto flex align-center justify-end flex-1">
         <button
           className={`${zillaSlab.variable} mr-2 border rounded px-3 py-2 text-s text-gray-600 leading-none`}
         >

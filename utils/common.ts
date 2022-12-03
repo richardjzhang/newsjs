@@ -5,21 +5,18 @@ export const errorHandler = (
   res: NextApiResponse,
   code: number = 400
 ) => {
-  return res.status(code).json({
+  res.status(code).json({
     hasError: true,
     errorMessage: data,
   });
 };
 
 export const responseHandler = (
-  data: {
-    name: string;
-    email: string;
-  },
+  data: { [key: string]: string },
   res: NextApiResponse,
   code: number = 200
 ) => {
-  return res.status(code).json({
+  res.status(code).json({
     hasError: false,
     body: data,
   });
