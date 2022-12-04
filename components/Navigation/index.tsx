@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { Zilla_Slab } from "@next/font/google";
 
 const zillaSlab = Zilla_Slab({
@@ -7,25 +9,33 @@ const zillaSlab = Zilla_Slab({
 });
 
 export default function Navigation() {
+  const { data, status } = useSession();
+  const authenticated = status === "authenticated";
+  const user = data?.user;
   return (
     <div className="py-4 px-3 flex align-center justify-between border-b-2">
-      <button className="flex justify-start items-center flex-1 text-lg">
-        <Link href="/profile">Richard</Link>
-      </button>
+      <div className="flex flex-1">
+        {user && authenticated && (
+          <button className="flex justify-start items-center text-lg">
+            <Link href="/profile">{user.name}</Link>
+          </button>
+        )}
+      </div>
       <Link className="mx-4 text-4xl font-title font-bold uppercase" href="/">
         Newsjs
       </Link>
       <div className="ml-auto flex align-center justify-end flex-1">
-        <button
-          className={`${zillaSlab.variable} mr-2 border rounded px-3 py-2 text-s text-gray-600 leading-none`}
-        >
-          <Link href="/login">Sign in</Link>
-        </button>
-        <button
-          className={`${zillaSlab.variable} border rounded px-3 py-2 text-s text-gray-600 leading-none`}
-        >
-          <Link href="/signup">Sign up</Link>
-        </button>
+        {status !== "loading" && (
+          <button
+            className={`${zillaSlab.variable} mr-2 border rounded px-3 py-2 text-s text-gray-600 leading-none`}
+            onClick={() => {
+              signOut();
+            }}
+          >
+            {authenticated && "Logout"}
+            {status === "unauthenticated" && <Link href="/login">Sign in</Link>}
+          </button>
+        )}
       </div>
     </div>
   );

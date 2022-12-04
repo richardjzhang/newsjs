@@ -21,7 +21,6 @@
       "api/*": ["./api/*"],
       "lib/*": ["./lib/*"],
       "models/*": ["./models/*"],
-      "client/*": ["./client/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

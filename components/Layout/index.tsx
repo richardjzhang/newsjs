@@ -1,3 +1,4 @@
+import { useSession } from "next-auth/react";
 import Navigation from "components/Navigation";
 
 interface Props {
@@ -5,6 +6,7 @@ interface Props {
 }
 
 export default function Layout({ children }: Props) {
+  const { data: session, status } = useSession();
   return (
     <div className="h-full">
       <Navigation />
