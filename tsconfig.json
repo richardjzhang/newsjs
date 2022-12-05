@@ -18,7 +18,7 @@
       "components/*": ["./components/*"],
       "utils/*": ["./utils/*"],
       "styles/*": ["./styles/*"],
-      "api/*": ["./api/*"],
+      "api/*": ["./pages/api/*"],
       "lib/*": ["./lib/*"],
       "models/*": ["./models/*"],
     }

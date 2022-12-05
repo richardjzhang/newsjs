@@ -39,13 +39,16 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async session({ session, user, token }) {
-      if (user && user.id) {
-        session.user.id = user.id;
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.uid;
       }
       return session;
     },
-    async jwt({ token, user, account, profile, isNewUser }) {
+    async jwt({ token, user }) {
+      if (user && user._id) {
+        token.uid = user._id;
+      }
       return token;
     },
   },
