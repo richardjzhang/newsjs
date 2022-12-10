@@ -12,7 +12,7 @@ export const errorHandler = (
 };
 
 export const responseHandler = (
-  data: { [key: string]: string },
+  data: { [key: string]: string } | any[],
   res: NextApiResponse,
   code: number = 200
 ) => {

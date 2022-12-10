@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Image from "next/legacy/image";
 
 export default function PostCreatePage() {
   const [title, setTitle] = useState<string>("");
@@ -82,7 +83,15 @@ export default function PostCreatePage() {
           </div>
           <div className="flex-1">
             {image && typeof image === "string" && (
-              <img src={image} className="w-full" />
+              <div className="relative h-40">
+                <Image
+                  alt="Uploaded image"
+                  src={image}
+                  className="absolute top-0 left-0"
+                  layout="fill"
+                  objectFit="contain"
+                />
+              </div>
             )}
           </div>
         </div>

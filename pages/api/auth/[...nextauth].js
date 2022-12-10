@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import User from "models/user";
 import { validateAllOnce } from "utils/common";
+import dbConnect from "lib/db-connect";
 
 export const authOptions = {
   providers: [
@@ -15,6 +16,7 @@ export const authOptions = {
           // const user = { id: "1", name: "J Smith", email: "jsmith@example.com" };
           const { email, password } = credentials;
           validateAllOnce({ email, password });
+          await dbConnect();
           const user = await User.findOne({ email }).exec();
 
           if (!user) {

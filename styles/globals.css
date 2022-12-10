@@ -4,6 +4,7 @@
 
 html,
 body {
+  background-color: rgb(243 244 246);
   line-height: 1;
   height: 100vh;
   padding: 0 24px;

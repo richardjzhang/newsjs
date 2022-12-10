@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, Document, Model } from "mongoose";
 
-interface Post {
+interface PostDocument extends Document {
   title: string;
   slug: string;
   description: string;
@@ -8,7 +8,7 @@ interface Post {
   user: mongoose.Schema.Types.ObjectId;
 }
 
-const postSchema = new mongoose.Schema<Post>(
+const postSchema = new mongoose.Schema<PostDocument>(
   {
     title: {
       type: String,

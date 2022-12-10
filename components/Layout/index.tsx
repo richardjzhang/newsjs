@@ -1,12 +1,18 @@
 import { useSession } from "next-auth/react";
 import Navigation from "components/Navigation";
+import LoadingSpinner from "components/LoadingSpinner";
 
 interface Props {
   children: React.ReactNode;
 }
 
 export default function Layout({ children }: Props) {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
+
+  if (status === "loading") {
+    return <LoadingSpinner />;
+  }
+
   return (
     <div className="h-full">
       <Navigation />

@@ -14,7 +14,13 @@ module.exports = {
         title: ["var(--font-playfair)", ...fontFamily.serif],
         body: ["var(--font-zilla-slab)", ...fontFamily.sans],
       },
+      lineClamp: {
+        7: "7",
+        8: "8",
+        9: "9",
+        10: "10",
+      },
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/line-clamp")],
 };

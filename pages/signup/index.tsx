@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Image from "next/legacy/image";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -38,17 +39,19 @@ export default function Signup() {
 
   useEffect(() => {
     if (status === "authenticated") router.replace("/");
-  }, [status]);
+  }, [router, status]);
 
   if (status === "unauthenticated") {
     return (
       <div className="px-6 h-full flex items-center text-gray-800">
-        <div className="flex xl:justify-center lg:justify-between justify-center items-center flex-wrap g-6">
-          <div className="grow-0 shrink-1 md:shrink-0 basis-auto xl:w-6/12 lg:w-6/12 md:w-9/12 mb-12 md:mb-0">
-            <img
-              src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-              className="w-full"
-              alt="Sample image"
+        <div className="w-full flex xl:justify-center lg:justify-between justify-center items-center flex-wrap g-6">
+          <div className="relative h-96 grow-0 shrink-1 md:shrink-0 basis-auto xl:w-6/12 lg:w-6/12 md:w-9/12 mb-12 md:mb-0">
+            <Image
+              alt="Login image"
+              className="absolute top-0 left-0"
+              src="/images/draw2.webp"
+              layout="fill"
+              objectFit="contain"
             />
           </div>
           <div className="xl:ml-20 xl:w-5/12 lg:w-5/12 md:w-8/12 mb-12 md:mb-0">
