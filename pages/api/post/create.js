@@ -1,55 +1,51 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from "next";
-import { ObjectId } from "mongoose";
-import nc from "next-connect";
 import { unstable_getServerSession } from "next-auth/next";
+import nc from "next-connect";
+import multer from "multer";
+const cloudinary = require("cloudinary").v2;
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 import slugify from "slugify";
 import { authOptions } from "api/auth/[...nextauth]";
-import * as path from "path";
-import { Request } from "express";
-import multer from "multer";
 import { errorHandler, responseHandler, validateAllOnce } from "utils/common";
 import Post from "models/post";
-import User from "models/user";
 import dbConnect from "lib/db-connect";
-
-type DestinationCallback = (error: Error | null, destination: string) => void;
-type FileNameCallback = (error: Error | null, filename: string) => void;
 
 export const config = {
   api: {
-    bodyParser: false,
+    bodyParser: false, // Disallow body parsing, consume as stream
   },
 };
 
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: function (
-      req: Request,
-      file: Express.Multer.File,
-      cb: DestinationCallback
-    ) {
-      cb(null, path.join(process.cwd(), "public", "uploads"));
-    },
-    filename: function (_, file: Express.Multer.File, cb: FileNameCallback) {
-      cb(null, `${new Date().getTime()}-${file.originalname}`);
-    },
-  }),
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const handler = nc<NextApiRequest, NextApiResponse>({
-  onError: (err: any, _, res: NextApiResponse) => {
-    console.error(err.stack);
-    res.status(500).end("Something broke!");
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: process.env.CLOUDINARY_FOLDER,
   },
-  onNoMatch: (_, res: NextApiResponse) => {
-    res.status(404).end("Page is not found");
+});
+
+const upload = multer({ storage });
+
+const handler = nc({
+  onError(error, _, res) {
+    res
+      .status(501)
+      .json({ error: `Sorry something Happened! ${error.message}` });
+  },
+  onNoMatch(req, res) {
+    res.status(405).json({ error: `Method "${req.method}" Not Allowed` });
   },
 })
   .use(upload.single("image"))
-  .post(async (req: Request, res: NextApiResponse) => {
+  .post(async (req, res) => {
     try {
       const session = await unstable_getServerSession(req, res, authOptions);
+
       if (session) {
         const { title, description } = req.body;
         validateAllOnce({ title, description });
@@ -59,17 +55,18 @@ const handler = nc<NextApiRequest, NextApiResponse>({
           return;
         }
 
+        const uploadUrl = req.file.path;
+
         await dbConnect();
         const userId = session.user.id;
-        const url = `/uploads/${req.file?.filename}`;
-        const slug = slugify(req.body.title, {
+        const slug = slugify(`${new Date()}-${title}`, {
           remove: /[*+~.()'"!:@]/g,
         });
         const post = new Post({
-          title: req.body.title,
-          description: req.body.description,
+          title,
+          description,
           slug,
-          image: url,
+          image: uploadUrl,
           user: userId,
         });
         const savePost = await post.save();
