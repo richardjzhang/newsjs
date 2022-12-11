@@ -9,14 +9,14 @@ interface Props {
 export default function Layout({ children }: Props) {
   const { status } = useSession();
 
-  if (status === "loading") {
-    return <LoadingSpinner />;
-  }
-
   return (
-    <div className="h-full">
+    <div className="h-full flex flex-col">
       <Navigation />
-      <div className="py-5 h-[calc(100%-4.625rem)]">{children}</div>
+      {status === "loading" ? (
+        <LoadingSpinner />
+      ) : (
+        <div className="py-5 h-[calc(100%-4.625rem)]">{children}</div>
+      )}
     </div>
   );
 }

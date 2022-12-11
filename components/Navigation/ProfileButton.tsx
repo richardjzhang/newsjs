@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { useSession } from "next-auth/react";
 
 export default function ProfileButton() {
@@ -7,9 +6,7 @@ export default function ProfileButton() {
   const user = data?.user;
   if (user && authenticated) {
     return (
-      <button className="flex justify-start items-center text-lg">
-        {user.name}
-      </button>
+      <div className="flex justify-start items-center text-lg">{user.name}</div>
     );
   }
 

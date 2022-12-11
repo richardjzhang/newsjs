@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
+import ButtonBusy from "components/ButtonBusy";
 
 export default function Login() {
   const router = useRouter();
@@ -12,11 +13,13 @@ export default function Login() {
   const [errorMessage, setErrorMessage] = useState<string | null | undefined>(
     null
   );
+  const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
   const { status } = useSession();
 
   const loginHandler = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
+    setIsLoggingIn(true);
     const payload = { email, password };
     const response = await signIn("credentials", {
       ...payload,
@@ -30,6 +33,8 @@ export default function Login() {
     if (response && response.status === 200) {
       router.replace("/");
     }
+
+    setIsLoggingIn(false);
   };
 
   useEffect(() => {
@@ -74,10 +79,11 @@ export default function Login() {
             <div className="text-center lg:text-left">
               <button
                 type="button"
-                className="inline-block px-7 py-3 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                disabled={isLoggingIn}
+                className="disabled:bg-gray-500 inline-block px-7 py-3 bg-blue-600 text-white font-medium text-md leading-snug rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
                 onClick={loginHandler}
               >
-                Login
+                {isLoggingIn ? <ButtonBusy>Signing in...</ButtonBusy> : "Login"}
               </button>
               <p className="text-sm font-semibold mt-2 pt-1 mb-0">
                 Don&#39;t have an account?{" "}

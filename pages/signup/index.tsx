@@ -3,17 +3,20 @@ import Image from "next/legacy/image";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import ButtonBusy from "components/ButtonBusy";
 export default function Signup() {
   const router = useRouter();
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isSigningUp, setIsSigningUp] = useState<boolean>(false);
   const { status } = useSession();
 
   const signupHandler = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
+    setIsSigningUp(true);
     const payload = { name, email, password };
     await fetch("/api/signup", {
       method: "POST",
@@ -27,12 +30,14 @@ export default function Signup() {
           setErrorMessage(null);
           router.push("/login");
         }
+        setIsSigningUp(false);
         return res.json();
       })
       .then((res) => {
         if (res.hasError) setErrorMessage(res.errorMessage);
       })
       .catch((err) => {
+        setIsSigningUp(false);
         setErrorMessage(err);
       });
   };
@@ -90,10 +95,15 @@ export default function Signup() {
               <div className="text-center lg:text-left">
                 <button
                   type="button"
-                  className="inline-block px-7 py-3 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                  disabled={isSigningUp}
+                  className="disabled:bg-gray-500 inline-block px-7 py-3 bg-blue-600 text-white font-medium text-md leading-snug rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
                   onClick={signupHandler}
                 >
-                  Sign up
+                  {isSigningUp ? (
+                    <ButtonBusy>Registering</ButtonBusy>
+                  ) : (
+                    "Sign up"
+                  )}
                 </button>
                 <p className="text-sm font-semibold mt-2 pt-1 mb-0">
                   Already have an account?{" "}

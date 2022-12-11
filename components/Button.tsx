@@ -1,10 +1,5 @@
 import Link from "next/link";
-import { Zilla_Slab } from "@next/font/google";
-
-const zillaSlab = Zilla_Slab({
-  weight: ["400", "600", "700"],
-  variable: "--font-zilla-slab",
-});
+import { zillaSlab } from "utils/fonts";
 
 interface ButtonProps {
   children: React.ReactNode;
